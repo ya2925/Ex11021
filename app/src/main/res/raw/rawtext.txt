@@ -1,0 +1,5 @@
+this test is from the raw file
+this file is located in the raw directory
+in the res directory
+we acsses the file on read only mode
+and read it using buffer
