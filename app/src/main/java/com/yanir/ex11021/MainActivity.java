@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,12 +29,8 @@ import java.io.InputStreamReader;
 public class MainActivity extends AppCompatActivity {
 
     private final String FILENAME = "rawtext.txt";
-    String fileName,line;
+    String fileName;
     int resourceId;
-    InputStream iS;
-    InputStreamReader iSR;
-    BufferedReader bR;
-    StringBuilder sB;
     TextView textTV;
     EditText textET;
     Intent si;
@@ -59,28 +56,32 @@ public class MainActivity extends AppCompatActivity {
      * @param v The button that is clicked to trigger this function
      * @throws IOException If there is an error reading the file.
      */
-    public void readFromFile(View v) throws IOException {
-        // Open the raw resource file.
-        InputStream iS = this.getResources().openRawResource(resourceId);
-        InputStreamReader iSR = new InputStreamReader(iS);
-        BufferedReader bR = new BufferedReader(iSR);
+    public void readFromFile(View v) {
+        try {
+            // Open the raw resource file.
+            InputStream iS = this.getResources().openRawResource(resourceId);
+            InputStreamReader iSR = new InputStreamReader(iS);
+            BufferedReader bR = new BufferedReader(iSR);
 
-        // Create a StringBuilder object to store the contents of the file.
-        StringBuilder sB = new StringBuilder();
+            // Create a StringBuilder object to store the contents of the file.
+            StringBuilder sB = new StringBuilder();
 
-        // Read each line of the file and append it to the StringBuilder object.
-        String line;
-        while ((line = bR.readLine()) != null) {
-            sB.append(line + '\n');
+            // Read each line of the file and append it to the StringBuilder object.
+            String line;
+            while ((line = bR.readLine()) != null) {
+                sB.append(line + '\n');
+            }
+
+            // Close the BufferedReader, InputStreamReader, and InputStream objects.
+            bR.close();
+            iSR.close();
+            iS.close();
+
+            // Set the text of the textTV TextView object to the contents of the StringBuilder object.
+            textTV.setText(sB.toString());
+        } catch (IOException e) {
+            Log.e("MainActivity","ERROR reading");
         }
-
-        // Close the BufferedReader, InputStreamReader, and InputStream objects.
-        bR.close();
-        iSR.close();
-        iS.close();
-
-        // Set the text of the textTV TextView object to the contents of the StringBuilder object.
-        textTV.setText(sB.toString());
     }
 
     /**
